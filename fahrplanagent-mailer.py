@@ -30,7 +30,6 @@ from fahrplanagent import ExpectedTrain, FahrplanAPI
 
 # E-Mail-Adresse für Benachrichtigung
 mailto = None
-mailto = 'christoph.jacob@gmail.com'
 
 
 # Liste der Verbindungen, die überprüft werden
