@@ -56,7 +56,7 @@ class FahrplanAPI(object):
     def __init__(self):
         progdir = os.path.abspath(os.path.dirname(__file__))
         try:
-            f = open(os.path.join(progdir, 'fahplanapi-accesstoken.txt'))
+            f = open(os.path.join(progdir, 'fahrplanapi-accesstoken.txt'))
             self.token = f.read().strip()
             f.close()
 
