@@ -20,9 +20,10 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 from __future__ import print_function
+from __future__ import unicode_literals
 
 import datetime
-import StringIO
+import io
 import subprocess
 
 from fahrplanagent import ExpectedTrain, FahrplanAPI
@@ -57,7 +58,7 @@ def main():
         print()
         f = None
     else:
-        f = StringIO.StringIO()
+        f = io.StringIO()
 
     all_ok = True
     for t in trains():
@@ -66,11 +67,11 @@ def main():
         all_ok = all_ok and t.all_ok()
         t.print_info(file=f)
         t.print_status(file=f)
-        print(file=f)
+        print('', file=f)
 
     if not all_ok and (mailto is not None):
         p = subprocess.Popen(['mail', '-s '+subject, mailto], stdin=subprocess.PIPE)
-        p.communicate(input=f.getvalue())
+        p.communicate(input=f.getvalue().encode('utf-8'))
 
 
 if __name__ == "__main__":
