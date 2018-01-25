@@ -93,7 +93,7 @@ class FahrplanAPI(object):
         for train in res:
             if train['name'] == number:
                 time = datetime_from_iso(train['dateTime']).time()
-                return train['detailsId'], time, train['track']
+                return train['detailsId'], time, train.get('track', 0)
         return None, None, None
 
     def get_train_stops(self, train_id):
