@@ -39,18 +39,33 @@ def api():
 
 
 @pytest.fixture(scope='function')
-def ice595():
-    return ExpectedTrain('Berlin Hbf', 'Braunschweig Hbf', 'ICE 595', '7:34', '8:56', 14)
+def ice1691():
+    return ExpectedTrain('Berlin Hbf', 'Braunschweig Hbf', 'ICE 1691', '7:34', '8:57', 14)
 
 
 @pytest.fixture(scope='function')
-def ice595_fake():
-    return ExpectedTrain('Berlin Hbf', 'Braunschweig Hbf', 'ICE 595', '6:34', '7:56', 14)
+def ice1691_fake():
+    return ExpectedTrain('Berlin Hbf', 'Braunschweig Hbf', 'ICE 1691', '6:34', '7:57', 14)
 
 
 @pytest.fixture(scope='function')
-def ice370():
-    return ExpectedTrain('Braunschweig Hbf', 'Berlin Hbf', 'ICE 370', '15:59', '17:28', 7)
+def ice1691_late():
+    return ExpectedTrain('Berlin Hbf', 'Braunschweig Hbf', 'ICE 1691', '7:44', '8:57', 14)
+
+
+@pytest.fixture(scope='function')
+def ice1691_tc():
+    return ExpectedTrain('Berlin Hbf', 'Braunschweig Hbf', 'ICE 1691', '7:34', '8:57', 12)
+
+
+@pytest.fixture(scope='function')
+def ice1691_larr():
+    return ExpectedTrain('Berlin Hbf', 'Braunschweig Hbf', 'ICE 1691', '7:34', '8:47', 14)
+
+
+@pytest.fixture(scope='function')
+def ice1691_nostop():
+    return ExpectedTrain('Berlin Hbf', 'Wolfsburg Hbf', 'ICE 1691', '7:34', '8:57', 14)
 
 
 def test_station_id(api):
@@ -59,66 +74,66 @@ def test_station_id(api):
 
 
 def test_train(api):
-    date = datetime.date(2017, 5, 3)
+    date = datetime.date(2018, 1, 4)
     time = datetime.time(7, 00)
-    train_id, time, track = api.get_train(8011160, date, time, 'ICE 595')
+    train_id, time, track = api.get_train(8011160, date, time, 'ICE 1691')
     assert (time == datetime.time(7, 34))
     assert (track == '14')
 
 
 def test_train_fails(api):
-    date = datetime.date(2017, 5, 3)
+    date = datetime.date(2018, 1, 4)
     time = datetime.time(8, 00)
-    train_id, time, track = api.get_train(8011160, date, time, 'ICE 595')
+    train_id, time, track = api.get_train(8011160, date, time, 'ICE 1691')
     assert (train_id is None)
 
 
 def test_stops(api):
-    date = datetime.date(2017, 5, 3)
+    date = datetime.date(2018, 1, 4)
     time = datetime.time(7, 00)
-    train_id, time, track = api.get_train(8011160, date, time, 'ICE 595')
+    train_id, time, track = api.get_train(8011160, date, time, 'ICE 1691')
     stops = [s['stopName'] for s in api.get_train_stops(train_id)]
     assert ('Braunschweig Hbf' in stops)
 
 
-def test_expected_train(api, ice595):
-    ok = ice595.check_for_date(api, datetime.date(2017, 5, 3))
-    ice595.print_status()
+def test_expected_train(api, ice1691):
+    ok = ice1691.check_for_date(api, datetime.date(2018, 1, 4))
+    ice1691.print_status()
     assert (ok)
 
 
-def test_expected_train_notfound(api, ice595_fake):
-    ok = ice595_fake.check_for_date(api, datetime.date(2017, 5, 3))
-    ice595_fake.print_status()
+def test_expected_train_notfound(api, ice1691_fake):
+    ok = ice1691_fake.check_for_date(api, datetime.date(2018, 1, 4))
+    ice1691_fake.print_status()
     assert (not ok)
 
 
-def test_expected_train_earlier(api, ice595):
-    ok = ice595.check_for_date(api, datetime.date(2017, 5, 22))
-    ice595.print_status()
+def test_expected_train_earlier(api, ice1691_late):
+    ok = ice1691_late.check_for_date(api, datetime.date(2018, 1, 4))
+    ice1691_late.print_status()
     assert (not ok)
-    assert (not ice595.ontime[0])
-    assert (ice595.ontime[1] == datetime.time(7, 23))
+    assert (not ice1691_late.ontime[0])
+    assert (ice1691_late.ontime[1] == datetime.time(7, 34))
 
 
-def test_expected_train_trackchange(api, ice595):
-    ok = ice595.check_for_date(api, datetime.date(2017, 5, 22))
-    ice595.print_status()
+def test_expected_train_trackchange(api, ice1691_tc):
+    ok = ice1691_tc.check_for_date(api, datetime.date(2018, 1, 4))
+    ice1691_tc.print_status()
     assert (not ok)
-    assert (not ice595.ontrack[0])
-    assert (ice595.ontrack[1] == '5')
+    assert (not ice1691_tc.ontrack[0])
+    assert (ice1691_tc.ontrack[1] == '14')
 
 
-def test_expected_train_nostop(api, ice595):
-    ok = ice595.check_for_date(api, datetime.date(2017, 5, 10))
-    ice595.print_status()
+def test_expected_train_nostop(api, ice1691_nostop):
+    ok = ice1691_nostop.check_for_date(api, datetime.date(2018, 1, 4))
+    ice1691_nostop.print_status()
     assert (not ok)
-    assert (not ice595.has_destination)
+    assert (not ice1691_nostop.has_destination)
 
 
-def test_expected_train_latearrival(api, ice370):
-    ok = ice370.check_for_date(api, datetime.date(2017, 5, 22))
-    ice370.print_status()
+def test_expected_train_latearrival(api, ice1691_larr):
+    ok = ice1691_larr.check_for_date(api, datetime.date(2018, 1, 4))
+    ice1691_larr.print_status()
     assert (not ok)
-    assert (not ice370.arrival_ontime[0])
-    assert (ice370.arrival_ontime[1] == datetime.time(17, 35))
+    assert (not ice1691_larr.arrival_ontime[0])
+    assert (ice1691_larr.arrival_ontime[1] == datetime.time(8, 57))

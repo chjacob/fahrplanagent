@@ -36,11 +36,11 @@ mailto = None
 # Liste der Verbindungen, die überprüft werden
 def trains():
     t = [
-        ExpectedTrain('Berlin Hbf', 'Braunschweig Hbf', 'ICE 595', '7:34', '8:56', 14),
+        ExpectedTrain('Berlin Hbf', 'Braunschweig Hbf', 'ICE 1691', '7:34', '8:57', 14),
 
-        ExpectedTrain('Braunschweig Hbf', 'Berlin Hbf', 'ICE 370', '15:59', '17:28', 7),
-        ExpectedTrain('Braunschweig Hbf', 'Berlin Hbf', 'ICE 598', '16:59', '18:25', 7),
-        ExpectedTrain('Braunschweig Hbf', 'Berlin Hbf', 'ICE 278', '17:59', '19:28', 7)
+        ExpectedTrain('Braunschweig Hbf', 'Berlin Hbf', 'ICE 370', '16:01', '17:28', 7),
+        ExpectedTrain('Braunschweig Hbf', 'Berlin Hbf', 'ICE 1196', '17:00', '18:25', 7),
+        ExpectedTrain('Braunschweig Hbf', 'Berlin Hbf', 'ICE 278', '18:01', '19:28', 7)
     ]
     return t
 
@@ -69,7 +69,7 @@ def main():
         t.print_status(file=f)
         print('', file=f)
 
-    if not all_ok and (mailto is not None):
+    if (mailto is not None):
         p = subprocess.Popen(['mail', '-s '+subject, mailto], stdin=subprocess.PIPE)
         p.communicate(input=f.getvalue().encode('utf-8'))
 
