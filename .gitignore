@@ -2,3 +2,5 @@
 .__pychache__
 *.pyc
 fahrplanapi-accesstoken.txt
+fahrplanapi-client-id.txt
+fahrplanapi-client-secret.txt

@@ -19,15 +19,11 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-from __future__ import print_function
-from __future__ import unicode_literals
-
 import os
 import datetime
 
-import urllib
+import urllib.request, urllib.parse, urllib.error
 import requests
-
 
 class API_Error(Exception):
     pass
@@ -52,27 +48,31 @@ def time_minus_30(time):
     return datetime.time(hh, mm)
 
 
-class FahrplanAPI(object):
+class FahrplanAPI:
 
     def __init__(self):
         progdir = os.path.abspath(os.path.dirname(__file__))
         try:
-            f = open(os.path.join(progdir, 'fahrplanapi-accesstoken.txt'))
-            self.token = f.read().strip()
+            f = open(os.path.join(progdir, 'fahrplanapi-client-id.txt'))
+            self.client_id = f.read().strip()
             f.close()
 
-            self.url = 'https://api.deutschebahn.com/fahrplan-plus/v1/'
+            f = open(os.path.join(progdir, 'fahrplanapi-client-secret.txt'))
+            self.client_secret = f.read().strip()
+            f.close()
+
+            self.url = 'https://apis.deutschebahn.com/db-api-marketplace/apis/fahrplan/v1/'
+
         except IOError:
-            self.token = None
-            self.url = 'https://api.deutschebahn.com/freeplan/v1/'
+            raise API_Error("Access data for Fahrplan API required.")
 
     def make_request(self, type, query, params=None):
         url = self.url + type + '/'
-        url = url + urllib.quote(str(query))
+        url = url + urllib.parse.quote(str(query))
 
-        headers = None
-        if self.token is not None:
-            headers = {'Authorization': 'Bearer '+self.token}
+        headers = {'DB-Client-Id': self.client_id,
+                   'DB-Api-Key': self.client_secret,
+                   'accept': "application/json"}
 
         r = requests.get(url, params=params, headers=headers)
         if not r.status_code == 200:
@@ -100,7 +100,7 @@ class FahrplanAPI(object):
         return self.make_request('journeyDetails', train_id)
 
 
-class ExpectedTrain(object):
+class ExpectedTrain:
 
     def __init__(self, departure, destination, number, deptime, arrtime, track):
         self.departure = departure
