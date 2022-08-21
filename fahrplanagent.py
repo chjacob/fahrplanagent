@@ -19,15 +19,11 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-from __future__ import print_function
-from __future__ import unicode_literals
-
 import os
 import datetime
 
-import urllib
+import urllib.request, urllib.parse, urllib.error
 import requests
-
 
 class API_Error(Exception):
     pass
@@ -52,7 +48,7 @@ def time_minus_30(time):
     return datetime.time(hh, mm)
 
 
-class FahrplanAPI(object):
+class FahrplanAPI:
 
     def __init__(self):
         progdir = os.path.abspath(os.path.dirname(__file__))
@@ -68,7 +64,7 @@ class FahrplanAPI(object):
 
     def make_request(self, type, query, params=None):
         url = self.url + type + '/'
-        url = url + urllib.quote(str(query))
+        url = url + urllib.parse.quote(str(query))
 
         headers = None
         if self.token is not None:
@@ -100,7 +96,7 @@ class FahrplanAPI(object):
         return self.make_request('journeyDetails', train_id)
 
 
-class ExpectedTrain(object):
+class ExpectedTrain:
 
     def __init__(self, departure, destination, number, deptime, arrtime, track):
         self.departure = departure
