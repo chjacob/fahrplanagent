@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
 # Fahrplan Agent - Informiert ueber DB Fahrplanaenderungen
@@ -19,11 +19,9 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-from __future__ import print_function
-from __future__ import unicode_literals
 
 import datetime
-import io
+from io import StringIO
 import subprocess
 
 from fahrplanagent import ExpectedTrain, FahrplanAPI
@@ -32,15 +30,15 @@ from fahrplanagent import ExpectedTrain, FahrplanAPI
 # E-Mail-Adresse für Benachrichtigung
 mailto = None
 
-
 # Liste der Verbindungen, die überprüft werden
 def trains():
     t = [
-        ExpectedTrain('Berlin Hbf', 'Braunschweig Hbf', 'ICE 1691', '7:34', '8:57', 14),
+        ExpectedTrain('Berlin Hbf', 'Braunschweig Hbf', 'ICE 277', '6:30', '7:55', 13),
+        ExpectedTrain('Berlin Hbf', 'Braunschweig Hbf', 'ICE 791', '7:33', '8:57', 14),
 
-        ExpectedTrain('Braunschweig Hbf', 'Berlin Hbf', 'ICE 370', '16:01', '17:28', 7),
-        ExpectedTrain('Braunschweig Hbf', 'Berlin Hbf', 'ICE 1196', '17:00', '18:25', 7),
-        ExpectedTrain('Braunschweig Hbf', 'Berlin Hbf', 'ICE 278', '18:01', '19:28', 7)
+        ExpectedTrain('Braunschweig Hbf', 'Berlin Hbf', 'ICE 370', '16:01', '17:27', 7),
+        ExpectedTrain('Braunschweig Hbf', 'Berlin Hbf', 'ICE 796', '17:02', '18:25', 7),
+        ExpectedTrain('Braunschweig Hbf', 'Berlin Hbf', 'ICE 278', '18:01', '19:27', 7)
     ]
     return t
 
@@ -58,7 +56,7 @@ def main():
         print()
         f = None
     else:
-        f = io.StringIO()
+        f = StringIO()
 
     all_ok = True
     for t in trains():
